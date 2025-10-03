@@ -1,16 +1,68 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %}Flasky{% endblock %}
+<style>
+    .scroll {
+      overflow-y: auto;
+    }
+</style>
 
 {% block page_content %}
-<div class="page-header">
-    <h1>Hello, {% if name %}{{ name }}{% else %}Stranger{% endif %}!</h1>
-    {% if not known %}
-    <p>Pleased to meet you!</p>
-    {% else %}
-    <p>Happy to see you again!</p>
+<div class="scroll">
+    <div class="page-header">
+        {% if nome %}
+            <h1>Olá, {{nome}}!</h1>
+        {% else %}
+            <h1>Olá, Estranho!</h1>
+        {% endif %}
+        {% if known %}
+            <p>Feliz em vê-lo novamente!</p>
+        {% else %}
+            <p>Prazer em conhecê-lo!</p>
+        {% endif %}
+    </div>
+    {{ wtf.quick_form(form) }}
+    <h2>Relação de usuários cadastrados</h2>
+    <h4>Quantidade: {{ qtdUsuarios }} </h4>
+    {% if usuarios %}
+        <table class='table'>
+            <thead>
+                <th>Nome do usuário</th>
+                <th>Função</th>
+            </thead>
+            <tbody>
+                {% for i in usuarios %}
+                    <tr>
+                        <td>{{ i.username }}</td>
+                        <td>{{ i.role.name }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+    <h2>Relação de funções cadastradas</h2>
+    <h4>Quantidade: {{ qtdFuncoes }} </h4>
+    {% if usuarios %}
+        <table class='table'>
+            <thead>
+                <th>Funções</th>
+                <th>Usuários</th>
+            </thead>
+            <tbody>
+                {% for i in funcoes %}
+                    <tr>
+                        <td>{{ i.name }}</td>
+                        <td>
+                            <ol>
+                                {% for j in i.users.all() %}
+                                    <li>{{ j.username }}</li>
+                                {% endfor %}
+                            </ol>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     {% endif %}
 </div>
-{{ wtf.quick_form(form) }}
 {% endblock %}
